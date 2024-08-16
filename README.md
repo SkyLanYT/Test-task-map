@@ -15,7 +15,7 @@
 - **Firebase Firestore:** для зберігання міток у реальному часі.
 - **MarkerClusterer:** для кластеризації міток на карті, що покращує продуктивність і зручність роботи з великою кількістю міток.
 
-## English
+###      in English
 # Test Task Map
 
 This project is a test task for **Viso**. It involves integrating Google Maps into a website where users can add markers to the map. All markers are stored in a **Firebase** database and are visible to anyone who visits the site. Users can also delete markers by right-clicking on them.
