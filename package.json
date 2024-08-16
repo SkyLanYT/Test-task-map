@@ -45,6 +45,7 @@
     ]
   },
   "devDependencies": {
-    "@types/googlemaps": "^3.43.3"
+    "@types/googlemaps": "^3.43.3",
+    "gh-pages": "^6.1.1"
   }
 }
