@@ -6,12 +6,12 @@ import { db } from '../firebaseConfig';
 
 const containerStyle = {
   width: '100%',
-  height: '700px'
+  height: '700px',
 };
 
 const center = {
   lat: 48.3794,
-  lng: 31.1656
+  lng: 31.1656,
 };
 
 const MemoizedGoogleMap = React.memo(GoogleMap);
@@ -24,12 +24,6 @@ const MapComponent: React.FC = () => {
   const [markers, setMarkers] = useState<{ id: string, lat: number, lng: number, label: string }[]>([]);
   const mapRef = useRef<google.maps.Map | null>(null);
   const markerClustererRef = useRef<MarkerClusterer | null>(null);
-
-  useEffect(() => {
-    if (mapRef.current && isLoaded) {
-      markerClustererRef.current = new MarkerClusterer({ map: mapRef.current });
-    }
-  }, [isLoaded]);
 
   const handleRemoveMarker = useCallback(async (id: string) => {
     await deleteDoc(doc(db, 'markers', id));
@@ -44,6 +38,7 @@ const MapComponent: React.FC = () => {
         id: doc.id,
         ...doc.data(),
       })) as { id: string, lat: number, lng: number, label: string }[];
+      console.log('Fetched markers:', markerList);
       setMarkers(markerList);
     };
 
@@ -51,9 +46,14 @@ const MapComponent: React.FC = () => {
   }, []);
 
   useEffect(() => {
-    if (markerClustererRef.current && markers.length > 0) {
-      markerClustererRef.current.clearMarkers();
-      const newMarkers = markers.map((marker) => {
+    if (mapRef.current && isLoaded) {
+      if (markerClustererRef.current) {
+        markerClustererRef.current.clearMarkers();
+      } else {
+        markerClustererRef.current = new MarkerClusterer({ map: mapRef.current });
+      }
+
+      const googleMarkers = markers.map((marker) => {
         const googleMarker = new google.maps.Marker({
           position: { lat: marker.lat, lng: marker.lng },
           label: marker.label,
@@ -61,13 +61,13 @@ const MapComponent: React.FC = () => {
         });
 
         googleMarker.addListener('rightclick', () => handleRemoveMarker(marker.id));
-
         return googleMarker;
       });
 
-      markerClustererRef.current.addMarkers(newMarkers);
+      markerClustererRef.current.addMarkers(googleMarkers);
+      console.log('Markers added to clusterer:', googleMarkers);
     }
-  }, [markers, handleRemoveMarker]);
+  }, [markers, isLoaded, handleRemoveMarker]);
 
   const handleMapClick = async (event: google.maps.MapMouseEvent) => {
     const newMarker = {
