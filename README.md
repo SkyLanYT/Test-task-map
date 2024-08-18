@@ -1,46 +1,37 @@
-# Getting Started with Create React App
+## English
+# Test Task Map
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+This project is a test task for **Viso**. It involves integrating Google Maps into a website where users can add markers to the map. All markers are stored in a **Firebase** database and are visible to anyone who visits the site. Users can also delete markers by right-clicking on them.
 
-## Available Scripts
+## Features
 
-In the project directory, you can run:
+- **Add Markers:** Users can add new markers to the map by clicking anywhere on the map. The marker will be added to Firebase and will be visible to all other users.
+- **Persistent Markers:** All markers are stored in Firebase, ensuring that the data is preserved and accessible to all users in real-time.
+- **Delete Markers:** Markers can be deleted from the map by right-clicking on them. Once deleted, the marker is also removed from the Firebase database.
 
-### `npm start`
+## Technologies Used
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+- **React:** Used for building the user interface.
+- **Google Maps API:** For integrating the map into the website.
+- **Firebase Firestore:** For storing markers in real-time.
+- **MarkerClusterer:** For clustering markers on the map, improving performance and usability when dealing with a large number of markers.
 
-The page will reload if you make edits.\
-You will also see any lint errors in the console.
+## Українською
 
-### `npm test`
+# Test Task Map
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+Цей проєкт є тестовим завданням для компанії **Viso**. Сайт передбачає інтеграцію з Google Maps, яка дозволяє користувачам додавати мітки на карту. Усі мітки зберігаються в базі даних **Firebase** і доступні для перегляду та взаємодії для всіх користувачів, які відвідують сайт.
 
-### `npm run build`
+## Опис функціональності
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+- **Додавання міток:** Користувачі можуть додавати нові мітки на карту, клацаючи на будь-яке місце на карті. Мітка буде додана у Firebase і стане видимою для всіх інших користувачів.
+- **Зберігання міток:** Усі мітки зберігаються у Firebase, що забезпечує збереження даних та їх доступність для всіх користувачів у реальному часі.
+- **Видалення міток:** Мітки можна видалити з карти, клацнувши на них правою кнопкою миші. Після видалення, мітка буде також видалена з бази даних Firebase.
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+## Використані технології
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+- **React:** для створення інтерфейсу користувача.
+- **Google Maps API:** для інтеграції карти на сайт.
+- **Firebase Firestore:** для зберігання міток у реальному часі.
+- **MarkerClusterer:** для кластеризації міток на карті, що покращує продуктивність і зручність роботи з великою кількістю міток.
 
-### `npm run eject`
-
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
-
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
-
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
-
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
