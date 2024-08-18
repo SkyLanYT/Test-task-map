@@ -1,7 +1,7 @@
 import React, { useState, useRef, useEffect, useCallback } from 'react';
 import { GoogleMap, useJsApiLoader } from '@react-google-maps/api';
 import { MarkerClusterer } from '@googlemaps/markerclusterer';
-import { collection, getDocs, addDoc, deleteDoc, doc } from 'firebase/firestore';
+import { collection, getDocs, addDoc, deleteDoc, doc, updateDoc } from 'firebase/firestore';
 import { db } from '../firebaseConfig';
 
 const containerStyle = {
@@ -30,6 +30,25 @@ const MapComponent: React.FC = () => {
     setMarkers(prevMarkers => prevMarkers.filter(marker => marker.id !== id));
   }, []);
 
+  const handleMarkerDragEnd = useCallback(async (id: string, position: google.maps.LatLng) => {
+    const updatedMarker = {
+      lat: position.lat(),
+      lng: position.lng(),
+    };
+    await updateDoc(doc(db, 'markers', id), updatedMarker);
+    setMarkers(prevMarkers =>
+      prevMarkers.map(marker => (marker.id === id ? { ...marker, ...updatedMarker } : marker))
+    );
+  }, []);
+
+  const handleClearAllMarkers = async () => {
+    const markerCollection = collection(db, 'markers');
+    const markerSnapshot = await getDocs(markerCollection);
+    const batch = markerSnapshot.docs.map((doc) => deleteDoc(doc.ref));
+    await Promise.all(batch);
+    setMarkers([]);
+  };
+
   useEffect(() => {
     const fetchMarkers = async () => {
       const markersCollection = collection(db, 'markers');
@@ -38,7 +57,6 @@ const MapComponent: React.FC = () => {
         id: doc.id,
         ...doc.data(),
       })) as { id: string, lat: number, lng: number, label: string }[];
-      console.log('Fetched markers:', markerList);
       setMarkers(markerList);
     };
 
@@ -58,16 +76,23 @@ const MapComponent: React.FC = () => {
           position: { lat: marker.lat, lng: marker.lng },
           label: marker.label,
           map: mapRef.current,
+          draggable: true,
         });
 
-        googleMarker.addListener('rightclick', () => handleRemoveMarker(marker.id));
+        googleMarker.addListener('dragend', (event: google.maps.MapMouseEvent) => {
+          if (event.latLng) {
+            handleMarkerDragEnd(marker.id, event.latLng);
+          }
+        });
+
+        googleMarker.addListener('click', () => handleRemoveMarker(marker.id));
+        
         return googleMarker;
       });
 
       markerClustererRef.current.addMarkers(googleMarkers);
-      console.log('Markers added to clusterer:', googleMarkers);
     }
-  }, [markers, isLoaded, handleRemoveMarker]);
+  }, [markers, isLoaded, handleRemoveMarker, handleMarkerDragEnd]);
 
   const handleMapClick = async (event: google.maps.MapMouseEvent) => {
     const newMarker = {
@@ -81,6 +106,7 @@ const MapComponent: React.FC = () => {
 
   return isLoaded ? (
     <div className="map-container">
+      <button onClick={handleClearAllMarkers} style={{ marginBottom: '10px' }}>Delete All Markers</button>
       <MemoizedGoogleMap
         mapContainerStyle={containerStyle}
         center={center}
@@ -91,7 +117,7 @@ const MapComponent: React.FC = () => {
         onClick={handleMapClick}
       />
     </div>
-  ) : <div>Loading...</div>;
+  ) : null;  
 };
 
 export default MapComponent;
